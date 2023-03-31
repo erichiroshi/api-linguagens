@@ -1,0 +1,23 @@
+version: '3'
+services:
+  linguagens-api:
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27818/aluraDb?authSource=admin
+    image: linguagens
+    networks:
+      - overlay
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:3.6
+    environment:
+      MONGO_INITDB_DATABASE: aluraDb
+    networks:
+      - overlay
+    ports:
+      - "27818:27017"
+networks:
+  overlay:
+    driver: bridge
