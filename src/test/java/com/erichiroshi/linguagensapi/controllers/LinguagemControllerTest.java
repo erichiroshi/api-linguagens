@@ -15,7 +15,7 @@ import com.erichiroshi.linguagensapi.entities.Linguagem;
 import com.erichiroshi.linguagensapi.repositories.LinguagemRepository;
 import com.erichiroshi.linguagensapi.services.LinguagemService;
 
-import io.restassured.http.ContentType;;
+import io.restassured.http.ContentType;
 
 @WebMvcTest
 class LinguagemControllerTest {
@@ -35,7 +35,7 @@ class LinguagemControllerTest {
 	}
 
 	@Test
-	void deveRetornarSucesso_QuandoBuscarLinguagem() {
+	void deveRetornarSucessoQuandoBuscarLinguagem() {
 		when(this.linguagemService.findById("64258c1a6e85dae77f9e5293")).thenReturn(new Linguagem());
 		
 		given()
@@ -47,7 +47,7 @@ class LinguagemControllerTest {
 	}
 	
 	@Test
-	void deveRetornarNaoEncontardo_QuandoBuscarLinguagem() {
+	void deveRetornarNaoEncontardoQuandoBuscarLinguagem() {
 		when(this.linguagemRepository.findById("64258c1a6e85dae77f9e5293asfasfas")).thenReturn(null);
 		
 		given()
