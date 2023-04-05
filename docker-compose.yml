@@ -1,23 +1,73 @@
-version: '3'
+version: "3"
 services:
-  linguagens-api:
+  es:
+    image: elasticsearch
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27818/aluraDb?authSource=admin
-    image: linguagens
+      - discovery.type=single-node
+      
+  sonarqube:
+    image: sonarqube:community
+    hostname: sonarqube
+    container_name: sonarqube
+    depends_on:
+      - db
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - "9000:9000"
     networks:
-      - overlay
+      - linguagem-network
+  db:
+    image: postgres:13
+    hostname: postgresql
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - linguagem-network
+
+  linguagensapi:
+    image: linguagensapi:v1
+    hostname: linguagensapi
+    container_name: linguagensapi
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/aluraDb
+    networks:
+      - linguagem-network
     ports:
       - "8080:8080"
     depends_on:
       - mongo
+      
   mongo:
-    image: mongo:3.6
+    image: mongo
+    hostname: mongo
+    container_name: mongo
     environment:
       MONGO_INITDB_DATABASE: aluraDb
     networks:
-      - overlay
+      - linguagem-network
     ports:
       - "27818:27017"
+      
 networks:
-  overlay:
+  linguagem-network:
     driver: bridge
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  postgresql:
+  postgresql_data:

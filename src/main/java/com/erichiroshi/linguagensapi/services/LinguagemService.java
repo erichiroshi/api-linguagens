@@ -22,6 +22,7 @@ public class LinguagemService {
 
 	public Linguagem findById(String id) {
 		return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
 	}
 
 	public List<Linguagem> findAll() {
